@@ -38,7 +38,10 @@ use std::fs::{self, File};
 use std::io::{self, prelude::*, BufReader};
 use std::process::Command;
 
-use super::{matrix::Matrix, PPMImg};
+use super::{
+    matrix::{transform, Matrix},
+    PPMImg,
+};
 
 pub struct DWScript {
     filename: String,
@@ -98,13 +101,13 @@ impl DWScript {
                     let (_dnum, dline) = getline_or_error(&mut lines);
                     let scale: Vec<f64> = parse_floats(dline);
                     assert_eq!(3, scale.len());
-                    self.trans = self.trans.mul(&Matrix::scale(scale[0], scale[1], scale[2]));
+                    self.trans = self.trans.mul(&transform::scale(scale[0], scale[1], scale[2]));
                 }
                 "move" => {
                     let (_dnum, dline) = getline_or_error(&mut lines);
                     let mv: Vec<f64> = parse_floats(dline);
                     assert_eq!(3, mv.len());
-                    self.trans = self.trans.mul(&Matrix::mv(mv[0], mv[1], mv[2]));
+                    self.trans = self.trans.mul(&transform::mv(mv[0], mv[1], mv[2]));
                 }
                 "rotate" => {
                     let (_dnum, dline) = getline_or_error(&mut lines);
@@ -112,9 +115,9 @@ impl DWScript {
                     let (scale, deg): (&str, f64) =
                         (v[0], v[1].parse().expect("Error parsing number"));
                     let rotate = match scale {
-                        "x" => Matrix::rotatex(deg),
-                        "y" => Matrix::rotatey(deg),
-                        "z" => Matrix::rotatez(deg),
+                        "x" => transform::rotatex(deg),
+                        "y" => transform::rotatey(deg),
+                        "z" => transform::rotatez(deg),
                         _ => panic!("Unknown rotation axis on line {}", _dnum),
                     };
                     self.trans = self.trans.mul(&rotate);
@@ -128,14 +131,13 @@ impl DWScript {
                     self.img
                         .write_binary(self.tmpfile_name.as_str())
                         .expect("Error writing to file");
-                    
                     let mut cmd = if cfg!(windows) {
                         Command::new("imdisplay")
                     } else {
                         Command::new("display")
                     };
                     let mut display = cmd
-                        .arg("-flip")
+                        // .arg("-flip")
                         .arg(self.tmpfile_name.as_str())
                         .spawn()
                         .unwrap();

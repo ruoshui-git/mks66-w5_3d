@@ -7,19 +7,19 @@ impl Matrix {
     pub fn add_box(&mut self, point: (f64, f64, f64), dx: f64, dy: f64, dz: f64) {
         let (x0, y0, z0) = point;
         self.append_edge(&[x0, y0, z0, x0 + dx, y0, z0]);
-        self.append_edge(&[x0, y0, z0, x0, y0 + dy, z0]);
-        self.append_edge(&[x0 + dx, y0, z0, x0 + dx, y0 + dy, z0]);
-        self.append_edge(&[x0, y0 + dy, z0, x0 + dx, y0 + dy, z0]);
+        self.append_edge(&[x0, y0, z0, x0, y0 - dy, z0]);
+        self.append_edge(&[x0 + dx, y0, z0, x0 + dx, y0 - dy, z0]);
+        self.append_edge(&[x0, y0 - dy, z0, x0 + dx, y0 - dy, z0]);
 
         self.append_edge(&[x0, y0, z0 + dz, x0 + dx, y0, z0 + dz]);
-        self.append_edge(&[x0, y0, z0 + dz, x0, y0 + dy, z0 + dz]);
-        self.append_edge(&[x0 + dx, y0, z0 + dz, x0 + dx, y0 + dy, z0 + dz]);
-        self.append_edge(&[x0, y0 + dy, z0 + dz, x0 + dx, y0 + dy, z0 + dz]);
+        self.append_edge(&[x0, y0, z0 + dz, x0, y0 - dy, z0 + dz]);
+        self.append_edge(&[x0 + dx, y0, z0 + dz, x0 + dx, y0 - dy, z0 + dz]);
+        self.append_edge(&[x0, y0 - dy, z0 + dz, x0 + dx, y0 - dy, z0 + dz]);
 
         self.append_edge(&[x0, y0, z0, x0, y0, z0 + dz]);
         self.append_edge(&[x0 + dx, y0, z0, x0 + dx, y0, z0 + dz]);
-        self.append_edge(&[x0, y0 + dy, z0, x0, y0 + dy, z0 + dz]);
-        self.append_edge(&[x0 + dx, y0 + dy, z0, x0 + dx, y0 + dy, z0 + dz]);
+        self.append_edge(&[x0, y0 - dy, z0, x0, y0 - dy, z0 + dz]);
+        self.append_edge(&[x0 + dx, y0 - dy, z0, x0 + dx, y0 - dy, z0 + dz]);
     }
 
     pub fn add_sphere(&mut self, center: (f64, f64, f64), radius: f64) {
@@ -89,7 +89,7 @@ impl Matrix {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::graphics::utils::draw_matrix;
+    use crate::graphics::{matrix::transform, utils::draw_matrix};
 
     #[test]
     fn draw_sphere() {
@@ -102,5 +102,12 @@ mod tests {
         let mut m = Matrix::new_edge_matrix();
         m.add_torus((250., 250., 0.), 10., 100.);
         draw_matrix(&m);
+    }
+    #[test]
+    fn draw_cube() {
+        let mut m = Matrix::new_edge_matrix();
+        m.add_box((10., 10., 0.), 100., 100., 100.);
+        let t = transform::rotatex(20.).mul(&transform::rotatey(20.));
+        draw_matrix(&m.mul(&t));
     }
 }

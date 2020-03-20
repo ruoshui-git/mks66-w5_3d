@@ -24,6 +24,7 @@ pub struct PPMImg {
     depth: u16, // max = 2^16
     pub x_wrap: bool,
     pub y_wrap: bool,
+    pub invert_y: bool,
     pub fg_color: RGB,
     pub bg_color: RGB,
     data: Vec<RGB>,
@@ -44,6 +45,7 @@ impl PPMImg {
             depth,
             x_wrap: false,
             y_wrap: false,
+            invert_y: true,
             fg_color: RGB::gray(depth),
             bg_color,
             data: vec![bg_color; (width * height).try_into().unwrap()],
@@ -135,6 +137,9 @@ impl PPMImg {
         } else {
             y
         };
+        
+        // invert y based on config
+        let y = if self.invert_y { self.width as i32 - y - 1 } else { y };
 
         // now we know that x and y are positive, we can cast without worry
         Some((y * self.width as i32 + x).try_into().unwrap())

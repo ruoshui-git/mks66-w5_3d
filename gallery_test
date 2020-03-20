@@ -14,5 +14,4 @@ y -20
 move
 250 400 0
 apply
-save
-img.ppm
+display

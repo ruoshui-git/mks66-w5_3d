@@ -3,9 +3,13 @@
 
 use std::fmt;
 
+// standalone
+pub mod transform;
+pub mod projections;
+
+// impl on Matrix
 pub mod parametrics;
 pub mod shapes;
-pub mod transform;
 
 #[derive(Clone, Debug)]
 /// Row major rectangular matrix

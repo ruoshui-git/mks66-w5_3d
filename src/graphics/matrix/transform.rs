@@ -1,28 +1,26 @@
 use super::Matrix;
 
 // generate transformation matrices
-impl Matrix {
-    /// Generate a translate matrix with (dx, dy, dz)
-    pub fn mv(dx: f64, dy: f64, dz: f64) -> Matrix {
-        let mut m = Matrix::ident(4);
+/// Generate a translate matrix with (dx, dy, dz)
+pub fn mv(dx: f64, dy: f64, dz: f64) -> Matrix {
+    let mut m = Matrix::ident(4);
 
-        m.set(3, 0, dx);
-        m.set(3, 1, dy);
-        m.set(3, 2, dz);
-        m
-    }
+    m.set(3, 0, dx);
+    m.set(3, 1, dy);
+    m.set(3, 2, dz);
+    m
+}
 
-    /// Generate a scale matrix with (sx, sy, sz)
-    pub fn scale(sx: f64, sy: f64, sz: f64) -> Matrix {
-        let mut m = Matrix::ident(4);
-        m.set(0, 0, sx);
-        m.set(1, 1, sy);
-        m.set(2, 2, sz);
-        m
-    }
+/// Generate a scale matrix with (sx, sy, sz)
+pub fn scale(sx: f64, sy: f64, sz: f64) -> Matrix {
+    let mut m = Matrix::ident(4);
+    m.set(0, 0, sx);
+    m.set(1, 1, sy);
+    m.set(2, 2, sz);
+    m
+}
 
-    
-    #[rustfmt::skip]
+#[rustfmt::skip]
     pub fn rotatex(angle_deg: f64) -> Matrix {
         // let mut m = Matrix::ident(4);
         // m.set(1, 1, angle_deg.to_radians().cos());
@@ -43,7 +41,7 @@ impl Matrix {
         )
     }
 
-    #[rustfmt::skip]
+#[rustfmt::skip]
     pub fn rotatey(angle_deg: f64) -> Matrix {
         // let mut m = Matrix::ident(4);
         // m.set(0, 0, angle_deg.to_radians().cos());
@@ -64,12 +62,11 @@ impl Matrix {
         )
     }
 
-    pub fn rotatez(angle_deg: f64) -> Matrix {
-        let mut m = Matrix::ident(4);
-        m.set(0, 0, angle_deg.to_radians().cos());
-        m.set(1, 1, angle_deg.to_radians().cos());
-        m.set(1, 0, angle_deg.to_radians().sin());
-        m.set(0, 1, -angle_deg.to_radians().sin());
-        m
-    }
+pub fn rotatez(angle_deg: f64) -> Matrix {
+    let mut m = Matrix::ident(4);
+    m.set(0, 0, angle_deg.to_radians().cos());
+    m.set(1, 1, angle_deg.to_radians().cos());
+    m.set(1, 0, angle_deg.to_radians().sin());
+    m.set(0, 1, -angle_deg.to_radians().sin());
+    m
 }
