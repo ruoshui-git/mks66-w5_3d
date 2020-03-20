@@ -47,10 +47,15 @@ pub(crate) fn compute_hermite3_coef(p0: f64, p1: f64, r0: f64, r1: f64) -> (f64,
 use crate::graphics::{PPMImg, Matrix};
 use std::{fs, process::Command};
 
-pub(crate) fn draw_matrix(m: &Matrix) {
+pub(crate) fn display_matrix(m: &Matrix, ndc: bool) {
     let mut img = PPMImg::new(500, 500, 225);
     let tmpfile_name = "tmp.ppm";
-    img.render_edge_matrix(m);
+    if ndc {
+        img.render_ndc_edges_n1to1(m);
+    }
+    else {
+        img.render_edge_matrix(m);
+    }
     img.write_binary(tmpfile_name)
         .expect("Error writing to file");
 

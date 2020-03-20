@@ -121,6 +121,11 @@ impl Matrix {
     pub fn iter_by_row(&self) -> std::slice::Chunks<'_, f64> {
         self.data.as_slice().chunks(self.ncols)
     }
+
+    pub fn mut_iter_by_row(&mut self) -> impl Iterator<Item=&mut [f64]>
+    {
+        self.data.as_mut_slice().chunks_exact_mut(self.ncols)
+    }
 }
 
 // mul

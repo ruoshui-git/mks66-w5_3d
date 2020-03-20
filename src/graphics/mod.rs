@@ -16,7 +16,7 @@ pub use colors::{HSL, RGB};
 pub use matrix::Matrix;
 
 // internal use
-use utils::{create_file, polar_to_xy};
+use utils::{create_file, polar_to_xy, mapper};
 
 pub struct PPMImg {
     height: u32,
@@ -45,7 +45,7 @@ impl PPMImg {
             depth,
             x_wrap: false,
             y_wrap: false,
-            invert_y: true,
+            invert_y: false,
             fg_color: RGB::gray(depth),
             bg_color,
             data: vec![bg_color; (width * height).try_into().unwrap()],
@@ -343,6 +343,21 @@ impl PPMImg {
             };
 
             self.draw_line(x0, y0, x1, y1);
+        }
+    }
+
+    pub fn render_ndc_edges_n1to1(&mut self, m:&Matrix) {
+        let map_width = mapper(-1., 1., 0., self.width as f64);
+        let map_height = mapper(-1., 1., 0., self.height as f64);
+        let mut iter = m.iter_by_row();
+        while let Some(point) = iter.next() {
+            let (x0, y0, _z0) = (point[0], point[1], point[2]);
+            let (x1, y1, _z1) = match iter.next() {
+                Some(p1) => (p1[0], p1[1], p1[2]),
+                None => panic!("Number of edges must be a multiple of 2"),
+            };
+
+            self.draw_line(map_width(-x0), map_height(y0), map_width(-x1), map_height(y1));
         }
     }
 }

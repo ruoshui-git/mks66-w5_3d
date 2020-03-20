@@ -70,3 +70,16 @@ pub fn rotatez(angle_deg: f64) -> Matrix {
     m.set(0, 1, -angle_deg.to_radians().sin());
     m
 }
+
+impl Matrix {
+    /// Correct edges after projection by dividing all values of point by w
+    pub fn correct_projection(&mut self) {
+        for point in self.mut_iter_by_row() {
+            let (x, y, z, w) = (point[0], point[1], point[2], point[3]);
+            point[0] = x / w;
+            point[1] = y / w;
+            point[2] = z / w;
+            point[3] = 1.;
+        }
+    }
+}

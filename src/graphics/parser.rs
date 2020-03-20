@@ -210,3 +210,12 @@ impl DWScript {
         self.edges.clone()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn script() {
+        DWScript::new("script").do_parse();
+    }
+}
