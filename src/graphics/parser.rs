@@ -87,7 +87,7 @@ impl DWScript {
         while let Some((num, line)) = lines.next() {
             let line = line.expect("Error while reading file");
             match line.trim() {
-                x if x.starts_with("\\") || x.starts_with("#") => {}
+                x if x.is_empty() || x.starts_with("\\") || x.starts_with("#") => {}
                 "line" => {
                     let (_dnum, dline) = getline_or_error(&mut lines);
                     let pts: Vec<f64> = parse_floats(dline);
